@@ -1,0 +1,25 @@
+services:
+
+  redis:
+    image: redis:7
+    container_name: atlas_redis
+    ports:
+      - "6379:6379"
+
+  backend:
+    build: ./backend
+    container_name: atlas_backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    environment:
+      REDIS_HOST: redis
+
+  ai-service:
+    build: ./ai-service
+    container_name: atlas_ai
+    depends_on:
+      - redis
+    environment:
+      REDIS_HOST: redis
